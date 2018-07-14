@@ -2,15 +2,18 @@ package com.spoloborota.calculator.algorithm.impl;
 
 import com.spoloborota.calculator.algorithm.Calculator;
 import com.spoloborota.calculator.algorithm.WrongExpressionException;
+import lombok.extern.log4j.Log4j2;
 
 import java.util.*;
 import java.lang.*;
+import java.util.regex.Pattern;
 
+@Log4j2
 class PostfixNotation implements Calculator {
     private static final List<String> OPERATORS = Arrays.asList("+", "-", "*", "/", "^");
     private static final List<String> DELIMITERS = Arrays.asList("+", "-", "*", "/", "^", "(", ")", " ");
     private static final String DELIMITERS_STRING = "() +-*/^";
-    private static boolean flag = true;
+    private static final Pattern INT_OR_FLOAT = Pattern.compile("^[0-9]*[.]?[0-9]+$");
 
     private static boolean isDelimiter(String token) {
         if (token.length() != 1) {
@@ -40,7 +43,13 @@ class PostfixNotation implements Calculator {
         }
     }
 
-    private static List<String> parse(String infix) {
+    private static void logAndThrow(String message) throws WrongExpressionException {
+        log.error(message);
+        throw new WrongExpressionException(message);
+    }
+
+    private static List<String> parse(String infix) throws WrongExpressionException {
+        log.info(() -> "Begin to process expression: " + infix);
         List<String> postfix = new ArrayList<>();
         Deque<String> stack = new ArrayDeque<>();
         StringTokenizer tokenizer = new StringTokenizer(infix, DELIMITERS_STRING, true);
@@ -49,9 +58,7 @@ class PostfixNotation implements Calculator {
         while (tokenizer.hasMoreTokens()) {
             curr = tokenizer.nextToken();
             if (!tokenizer.hasMoreTokens() && isOperator(curr)) {
-                System.out.println("Некорректное выражение.");
-                flag = false;
-                return postfix;
+                logAndThrow("Bad expression. Current expression stack: " + postfix);
             }
             if (curr.equals(" ")) {
                 continue;
@@ -65,16 +72,13 @@ class PostfixNotation implements Calculator {
                         while (!Objects.equals(stack.peek(), "(")) {
                             postfix.add(stack.pop());
                             if (stack.isEmpty()) {
-                                System.out.println("Wrong brackets");
-                                flag = false;
-                                return postfix;
+                                logAndThrow("Wrong brackets. Current expression stack: " + postfix);
                             }
                         }
                         stack.pop();
                         break;
                     default:
                         if (curr.equals("-") && (prev.equals("") || (isDelimiter(prev) && !prev.equals(")")))) {
-                            // унарный минус
                             curr = "u-";
                         } else {
                             while (!stack.isEmpty() && (priorityOf(curr) <= priorityOf(stack.peek()))) {
@@ -85,9 +89,14 @@ class PostfixNotation implements Calculator {
                         break;
                 }
             } else {
-                postfix.add(curr);
+                if (INT_OR_FLOAT.matcher(curr).matches()) {
+                    postfix.add(curr);
+                } else {
+                    logAndThrow("Unrecognized symbols: " + curr);
+                }
             }
             prev = curr;
+            log.debug(() -> "Temp postfix notation: " + postfix);
         }
 
         while (!stack.isEmpty()) {
@@ -95,15 +104,14 @@ class PostfixNotation implements Calculator {
                 postfix.add(stack.pop());
             }
             else {
-                System.out.println("Wrong brackets");
-                flag = false;
-                return postfix;
+                logAndThrow("Wrong brackets. Current expression stack: " + postfix);
             }
         }
         return postfix;
     }
 
     private static Double calc(List<String> postfix) {
+        log.info(() -> "Begin to calculate postfix notation expression: " + postfix);
         Deque<Double> stack = new ArrayDeque<>();
         for (String x : postfix) {
             switch (x) {
@@ -136,29 +144,13 @@ class PostfixNotation implements Calculator {
                     break;
             }
         }
+        log.info(() -> "Calculation result: " + stack.peek());
         return stack.pop();
     }
-    public static void main (String[] args) {
-        while(true) {
-            Scanner in = new Scanner(System.in);
-            String s = in.nextLine();
-            List<String> expression = PostfixNotation.parse(s);
-            if (flag) {
-                for (String x : expression) System.out.print(x + " ");
-                System.out.println();
-                System.out.println(calc(expression));
-            }
-        }
-    }
-
 
     @Override
     public Double calculate(String expression) throws WrongExpressionException {
-        List<String> lst = PostfixNotation.parse(expression);
-        if (flag) {
-            return calc(lst);
-        } else {
-            throw new WrongExpressionException("Bad expression");
-        }
+        return calc(PostfixNotation.parse(expression));
     }
+
 }
