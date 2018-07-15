@@ -3,12 +3,14 @@ package com.spoloborota.calculator.algorithm.impl;
 import com.spoloborota.calculator.algorithm.Calculator;
 import com.spoloborota.calculator.algorithm.WrongExpressionException;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.stereotype.Component;
 
 import java.util.*;
 import java.lang.*;
 import java.util.regex.Pattern;
 
 @Log4j2
+@Component
 class PostfixNotation implements Calculator {
     private static final List<String> OPERATORS = Arrays.asList("+", "-", "*", "/", "^");
     private static final List<String> DELIMITERS = Arrays.asList("+", "-", "*", "/", "^", "(", ")", " ");
