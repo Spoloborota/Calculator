@@ -1,6 +1,6 @@
 package com.spoloborota.calculator.algorithm.impl;
 
-import com.spoloborota.calculator.algorithm.WrongExpressionException;
+import com.spoloborota.calculator.exception.WrongExpressionException;
 import org.junit.Test;
 
 import java.util.NoSuchElementException;

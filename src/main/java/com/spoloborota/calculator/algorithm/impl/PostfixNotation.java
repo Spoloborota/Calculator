@@ -1,12 +1,17 @@
 package com.spoloborota.calculator.algorithm.impl;
 
 import com.spoloborota.calculator.algorithm.Calculator;
-import com.spoloborota.calculator.algorithm.WrongExpressionException;
+import com.spoloborota.calculator.exception.WrongExpressionException;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;
 
-import java.util.*;
-import java.lang.*;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Deque;
+import java.util.List;
+import java.util.Objects;
+import java.util.StringTokenizer;
 import java.util.regex.Pattern;
 
 @Log4j2
@@ -60,7 +65,7 @@ class PostfixNotation implements Calculator {
         while (tokenizer.hasMoreTokens()) {
             curr = tokenizer.nextToken();
             if (!tokenizer.hasMoreTokens() && isOperator(curr)) {
-                logAndThrow("Bad expression. Current expression stack: " + postfix);
+                logAndThrow("Bad expression.");
             }
             if (curr.equals(" ")) {
                 continue;
@@ -74,7 +79,7 @@ class PostfixNotation implements Calculator {
                         while (!Objects.equals(stack.peek(), "(")) {
                             postfix.add(stack.pop());
                             if (stack.isEmpty()) {
-                                logAndThrow("Wrong brackets. Current expression stack: " + postfix);
+                                logAndThrow("Wrong brackets.");
                             }
                         }
                         stack.pop();
@@ -106,7 +111,7 @@ class PostfixNotation implements Calculator {
                 postfix.add(stack.pop());
             }
             else {
-                logAndThrow("Wrong brackets. Current expression stack: " + postfix);
+                logAndThrow("Wrong brackets.");
             }
         }
         return postfix;
