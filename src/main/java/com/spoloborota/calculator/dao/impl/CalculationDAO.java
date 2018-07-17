@@ -8,7 +8,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.ParameterExpression;
 import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
 import java.time.LocalDate;
@@ -27,21 +26,23 @@ public class CalculationDAO implements ICalculationDAO {
     }
 
     @Override
-    public Integer countByDate(LocalDate date) {
+    public Long countByDate(LocalDate date) {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Calculation> query = cb.createQuery(Calculation.class);
-        Root<Calculation> calculation = query.from(Calculation.class);
-        query.where(cb.equal(calculation.get("date"), date));
-        return entityManager.createQuery(query).getResultList().size();
+        CriteriaQuery<Long> countQuery = cb.createQuery(Long.class);
+        Root<Calculation> calculation = countQuery.from(Calculation.class);
+        countQuery.select(cb.count(calculation));
+        countQuery.where(cb.equal(calculation.get("date"), date));
+        return entityManager.createQuery(countQuery).getSingleResult();
     }
 
     @Override
-    public Integer countContainsOp(String operation) {
+    public Long countContainsOp(String operation) {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Calculation> query = cb.createQuery(Calculation.class);
-        Root<Calculation> calculation = query.from(Calculation.class);
-        query.where(cb.like(calculation.get("expression"), "%" + operation + "%"));
-        return entityManager.createQuery(query).getResultList().size();
+        CriteriaQuery<Long> countQuery = cb.createQuery(Long.class);
+        Root<Calculation> calculation = countQuery.from(Calculation.class);
+        countQuery.select(cb.count(calculation));
+        countQuery.where(cb.like(calculation.get("expression"), "%" + operation + "%"));
+        return entityManager.createQuery(countQuery).getSingleResult();
     }
 
     @Override
@@ -64,6 +65,13 @@ public class CalculationDAO implements ICalculationDAO {
 
     @Override
     public Double popularNumber() {
+//        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+//        CriteriaQuery<Calculation> query = cb.createQuery(Calculation.class);
+//        Root<Calculation> calculation = query.from(Calculation.class);
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Long> countQuery = cb.createQuery(Long.class);
+        countQuery.select(cb.count(countQuery.from(Calculation.class)));
+        Long count = entityManager.createQuery(countQuery).getSingleResult();
         return null;
     }
 }

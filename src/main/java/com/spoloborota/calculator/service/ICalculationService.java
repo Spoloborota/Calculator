@@ -9,8 +9,8 @@ import java.util.List;
 
 public interface ICalculationService {
     Double calculateExpression(String expr) throws WrongExpressionException;
-    Integer countByDate(LocalDate date);
-    Integer countContainsOp(String operation) throws WrongOperationException;
+    Long countByDate(LocalDate date);
+    Long countContainsOp(String operation) throws WrongOperationException;
     List<Calculation> listByDate(LocalDate date);
     List<Calculation> listContainsOp(String operation) throws WrongOperationException;
     Double popularNumber();

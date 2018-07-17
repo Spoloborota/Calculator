@@ -36,12 +36,12 @@ public class CalculationService implements ICalculationService {
     }
 
     @Override
-    public Integer countByDate(LocalDate date) {
+    public Long countByDate(LocalDate date) {
         return calculationDAO.countByDate(date);
     }
 
     @Override
-    public Integer countContainsOp(String operation) throws WrongOperationException {
+    public Long countContainsOp(String operation) throws WrongOperationException {
         if (OPERATIONS.contains(operation)) {
             return calculationDAO.countContainsOp(operation);
         } else {

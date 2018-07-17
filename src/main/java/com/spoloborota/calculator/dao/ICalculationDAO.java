@@ -7,8 +7,8 @@ import java.util.List;
 
 public interface ICalculationDAO {
     void addCalculation(Calculation calc);
-    Integer countByDate(LocalDate date);
-    Integer countContainsOp(String operation);
+    Long countByDate(LocalDate date);
+    Long countContainsOp(String operation);
     List<Calculation> listByDate(LocalDate date);
     List<Calculation> listContainsOp(String operation);
     Double popularNumber();

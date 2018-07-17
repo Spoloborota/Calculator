@@ -33,12 +33,12 @@ public class CalculationController {
     }
 
     @PostMapping("count")
-    public ResponseEntity<Integer> count(@RequestBody LocalDate date) {
+    public ResponseEntity<Long> count(@RequestBody LocalDate date) {
         return new ResponseEntity<>(calculationService.countByDate(date), HttpStatus.OK);
     }
 
     @PostMapping("operation")
-    public ResponseEntity<Integer> operation(@RequestBody String operation) throws WrongOperationException {
+    public ResponseEntity<Long> operation(@RequestBody String operation) throws WrongOperationException {
         return new ResponseEntity<>(calculationService.countContainsOp(operation), HttpStatus.OK);
     }
 
