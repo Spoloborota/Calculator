@@ -2,16 +2,21 @@ package com.spoloborota.calculator.dao.impl;
 
 import com.spoloborota.calculator.dao.ICalculationDAO;
 import com.spoloborota.calculator.entity.Calculation;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
 import java.time.LocalDate;
-import java.util.List;
+
+import static com.spoloborota.calculator.common.Constants.*;
 
 @Transactional
 @Repository
@@ -31,7 +36,7 @@ public class CalculationDAO implements ICalculationDAO {
         CriteriaQuery<Long> countQuery = cb.createQuery(Long.class);
         Root<Calculation> calculation = countQuery.from(Calculation.class);
         countQuery.select(cb.count(calculation));
-        countQuery.where(cb.equal(calculation.get("date"), date));
+        countQuery.where(cb.equal(calculation.get(DATE_COLUMN), date));
         return entityManager.createQuery(countQuery).getSingleResult();
     }
 
@@ -41,37 +46,52 @@ public class CalculationDAO implements ICalculationDAO {
         CriteriaQuery<Long> countQuery = cb.createQuery(Long.class);
         Root<Calculation> calculation = countQuery.from(Calculation.class);
         countQuery.select(cb.count(calculation));
-        countQuery.where(cb.like(calculation.get("expression"), "%" + operation + "%"));
+        countQuery.where(cb.like(calculation.get(EXPRESSION_COLUMN), ANY_STRING + operation + ANY_STRING));
         return entityManager.createQuery(countQuery).getSingleResult();
     }
 
     @Override
-    public List<Calculation> listByDate(LocalDate date) {
+    public Page<Calculation> listByDate(LocalDate date, Pageable page) {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Calculation> query = cb.createQuery(Calculation.class);
-        Root<Calculation> calculation = query.from(Calculation.class);
-        query.where(cb.equal(calculation.get("date"), date));
-        return entityManager.createQuery(query).getResultList();
+        CriteriaQuery<Calculation> selectQuery = cb.createQuery(Calculation.class);
+        Root<Calculation> calculation = selectQuery.from(Calculation.class);
+        selectQuery.where(cb.equal(calculation.get(DATE_COLUMN), date));
+
+        TypedQuery<Calculation> pagedQuery = entityManager.createQuery(selectQuery);
+        int totalRows = pagedQuery.getResultList().size();
+        pagedQuery.setFirstResult(page.getPageNumber() * page.getPageSize());
+        pagedQuery.setMaxResults(page.getPageSize());
+
+        return new PageImpl<>(pagedQuery.getResultList(), page, totalRows);
     }
 
     @Override
-    public List<Calculation> listContainsOp(String operation) {
+    public Page<Calculation> listContainsOp(String operation, Pageable page) {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Calculation> query = cb.createQuery(Calculation.class);
-        Root<Calculation> calculation = query.from(Calculation.class);
-        query.where(cb.like(calculation.get("expression"), "%" + operation + "%"));
-        return entityManager.createQuery(query).getResultList();
+        CriteriaQuery<Calculation> selectQuery = cb.createQuery(Calculation.class);
+        Root<Calculation> calculation = selectQuery.from(Calculation.class);
+        selectQuery.where(cb.like(calculation.get(EXPRESSION_COLUMN), ANY_STRING + operation + ANY_STRING));
+
+        TypedQuery<Calculation> pagedQuery = entityManager.createQuery(selectQuery);
+        int totalRows = pagedQuery.getResultList().size();
+        pagedQuery.setFirstResult(page.getPageNumber() * page.getPageSize());
+        pagedQuery.setMaxResults(page.getPageSize());
+
+        return new PageImpl<>(pagedQuery.getResultList(), page, totalRows);
     }
 
     @Override
-    public Double popularNumber() {
-//        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-//        CriteriaQuery<Calculation> query = cb.createQuery(Calculation.class);
-//        Root<Calculation> calculation = query.from(Calculation.class);
+    public Page<String> getAllExpressions(Pageable page) {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Long> countQuery = cb.createQuery(Long.class);
-        countQuery.select(cb.count(countQuery.from(Calculation.class)));
-        Long count = entityManager.createQuery(countQuery).getSingleResult();
-        return null;
+        CriteriaQuery<String> selectQuery = cb.createQuery(String.class);
+        Root<Calculation> calculation = selectQuery.from(Calculation.class);
+        selectQuery.select(calculation.get(EXPRESSION_COLUMN));
+
+        TypedQuery<String> pagedQuery = entityManager.createQuery(selectQuery);
+        int totalRows = pagedQuery.getResultList().size();
+        pagedQuery.setFirstResult(page.getPageNumber() * page.getPageSize());
+        pagedQuery.setMaxResults(page.getPageSize());
+
+        return new PageImpl<>(pagedQuery.getResultList(), page, totalRows);
     }
 }

@@ -1,6 +1,7 @@
 package com.spoloborota.calculator.algorithm.impl;
 
 import com.spoloborota.calculator.algorithm.Calculator;
+import com.spoloborota.calculator.common.Constants;
 import com.spoloborota.calculator.exception.WrongExpressionException;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;
@@ -12,15 +13,12 @@ import java.util.Deque;
 import java.util.List;
 import java.util.Objects;
 import java.util.StringTokenizer;
-import java.util.regex.Pattern;
 
 @Log4j2
 @Component
-class PostfixNotation implements Calculator {
+public class PostfixNotation implements Calculator {
     private static final List<String> OPERATORS = Arrays.asList("+", "-", "*", "/", "^");
     private static final List<String> DELIMITERS = Arrays.asList("+", "-", "*", "/", "^", "(", ")", " ");
-    private static final String DELIMITERS_STRING = "() +-*/^";
-    private static final Pattern INT_OR_FLOAT = Pattern.compile("^[0-9]*[.]?[0-9]+$");
 
     private static boolean isDelimiter(String token) {
         if (token.length() != 1) {
@@ -59,7 +57,7 @@ class PostfixNotation implements Calculator {
         log.info(() -> "Begin to process expression: " + infix);
         List<String> postfix = new ArrayList<>();
         Deque<String> stack = new ArrayDeque<>();
-        StringTokenizer tokenizer = new StringTokenizer(infix, DELIMITERS_STRING, true);
+        StringTokenizer tokenizer = new StringTokenizer(infix, Constants.DELIMITERS_STRING, true);
         String prev = "";
         String curr = "";
         while (tokenizer.hasMoreTokens()) {
@@ -96,7 +94,7 @@ class PostfixNotation implements Calculator {
                         break;
                 }
             } else {
-                if (INT_OR_FLOAT.matcher(curr).matches()) {
+                if (Constants.INT_OR_FLOAT.matcher(curr).matches()) {
                     postfix.add(curr);
                 } else {
                     logAndThrow("Unrecognized symbols: " + curr);

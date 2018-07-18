@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
@@ -37,26 +38,25 @@ public class CalculationController {
         return new ResponseEntity<>(calculationService.countByDate(date), HttpStatus.OK);
     }
 
-    @PostMapping("operation")
-    public ResponseEntity<Long> operation(@RequestBody String operation) throws WrongOperationException {
+    @GetMapping("operation")
+    public ResponseEntity<Long> operation(@RequestParam String operation) throws WrongOperationException {
         return new ResponseEntity<>(calculationService.countContainsOp(operation), HttpStatus.OK);
     }
 
     @PostMapping("onDate")
-    public ResponseEntity<List<Calculation>> onDate(@RequestBody LocalDate date) {
-        return new ResponseEntity<>(calculationService.listByDate(date), HttpStatus.OK);
+    public List<Calculation> onDate(@RequestBody LocalDate date, @RequestParam int page, @RequestParam int size) {
+        return calculationService.listByDate(date, page, size).getContent();
     }
 
-    @PostMapping("onOperation")
-    public ResponseEntity<List<Calculation>> onOperation(@RequestBody String operation) throws WrongOperationException {
-        return new ResponseEntity<>(calculationService.listContainsOp(operation), HttpStatus.OK);
+    @GetMapping("onOperation")
+    public List<Calculation> onOperation(@RequestParam String operation, @RequestParam int page, @RequestParam int size)
+            throws WrongOperationException {
+        return calculationService.listContainsOp(operation, page, size).getContent();
     }
 
     @GetMapping("popular")
     public ResponseEntity<Double> popular() {
         return new ResponseEntity<>(calculationService.popularNumber(), HttpStatus.OK);
     }
-
-
 
 }
