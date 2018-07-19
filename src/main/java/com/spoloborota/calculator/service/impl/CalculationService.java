@@ -26,7 +26,7 @@ import java.util.StringTokenizer;
 @Service
 public class CalculationService implements ICalculationService {
 
-    private static final int PAGE_SIZE = 1000;
+    private static final int PAGE_SIZE = 5;
     private static final int FIRST_PAGE = 0;
     private static final Long INIT_VALUE = 1L;
     private static final Double DEFAULT_RESULT = 0.0;

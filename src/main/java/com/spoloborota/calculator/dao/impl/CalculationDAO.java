@@ -18,13 +18,13 @@ import java.time.LocalDate;
 
 import static com.spoloborota.calculator.common.Constants.*;
 
-@Transactional
 @Repository
 public class CalculationDAO implements ICalculationDAO {
 
     @PersistenceContext
     private EntityManager entityManager;
 
+    @Transactional
     @Override
     public void addCalculation(Calculation calc) {
         entityManager.persist(calc);
@@ -58,40 +58,35 @@ public class CalculationDAO implements ICalculationDAO {
         selectQuery.where(cb.equal(calculation.get(DATE_COLUMN), date));
 
         TypedQuery<Calculation> pagedQuery = entityManager.createQuery(selectQuery);
-        int totalRows = pagedQuery.getResultList().size();
         pagedQuery.setFirstResult(page.getPageNumber() * page.getPageSize());
         pagedQuery.setMaxResults(page.getPageSize());
-
-        return new PageImpl<>(pagedQuery.getResultList(), page, totalRows);
+        return new PageImpl<>(pagedQuery.getResultList());
     }
 
     @Override
     public Page<Calculation> listContainsOp(String operation, Pageable page) {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Calculation> selectQuery = cb.createQuery(Calculation.class);
-        Root<Calculation> calculation = selectQuery.from(Calculation.class);
-        selectQuery.where(cb.like(calculation.get(EXPRESSION_COLUMN), ANY_STRING + operation + ANY_STRING));
+        CriteriaQuery<Calculation> criteriaQuery = cb.createQuery(Calculation.class);
+        Root<Calculation> from = criteriaQuery.from(Calculation.class);
+        criteriaQuery.select(from.get(EXPRESSION_COLUMN));
+        criteriaQuery.where(cb.like(from.get(EXPRESSION_COLUMN), ANY_STRING + operation + ANY_STRING));
 
-        TypedQuery<Calculation> pagedQuery = entityManager.createQuery(selectQuery);
-        int totalRows = pagedQuery.getResultList().size();
+        TypedQuery<Calculation> pagedQuery = entityManager.createQuery(criteriaQuery);
         pagedQuery.setFirstResult(page.getPageNumber() * page.getPageSize());
         pagedQuery.setMaxResults(page.getPageSize());
-
-        return new PageImpl<>(pagedQuery.getResultList(), page, totalRows);
+        return new PageImpl<>(pagedQuery.getResultList());
     }
 
     @Override
     public Page<String> getAllExpressions(Pageable page) {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-        CriteriaQuery<String> selectQuery = cb.createQuery(String.class);
-        Root<Calculation> calculation = selectQuery.from(Calculation.class);
-        selectQuery.select(calculation.get(EXPRESSION_COLUMN));
+        CriteriaQuery<String> criteriaQuery = cb.createQuery(String.class);
+        Root<Calculation> from = criteriaQuery.from(Calculation.class);
+        criteriaQuery.select(from.get(EXPRESSION_COLUMN));
 
-        TypedQuery<String> pagedQuery = entityManager.createQuery(selectQuery);
-        int totalRows = pagedQuery.getResultList().size();
+        TypedQuery<String> pagedQuery = entityManager.createQuery(criteriaQuery);
         pagedQuery.setFirstResult(page.getPageNumber() * page.getPageSize());
         pagedQuery.setMaxResults(page.getPageSize());
-
-        return new PageImpl<>(pagedQuery.getResultList(), page, totalRows);
+        return new PageImpl<>(pagedQuery.getResultList());
     }
 }
