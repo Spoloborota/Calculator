@@ -12,5 +12,4 @@ H2 database console:<br>
 http://localhost:8080/console<br>
 JDBC URL to use: jdbc:h2:mem:calculationsdb
 
-Original task definition is on file:<br>
-Original_Task_Definition.docx
+Original task definition is [here](https://github.com/Spoloborota/Calculator/blob/master/Original_Task_Definition.docx).
