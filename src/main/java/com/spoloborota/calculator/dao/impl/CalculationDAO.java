@@ -68,7 +68,6 @@ public class CalculationDAO implements ICalculationDAO {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Calculation> criteriaQuery = cb.createQuery(Calculation.class);
         Root<Calculation> from = criteriaQuery.from(Calculation.class);
-        criteriaQuery.select(from.get(EXPRESSION_COLUMN));
         criteriaQuery.where(cb.like(from.get(EXPRESSION_COLUMN), ANY_STRING + operation + ANY_STRING));
 
         TypedQuery<Calculation> pagedQuery = entityManager.createQuery(criteriaQuery);
@@ -82,7 +81,6 @@ public class CalculationDAO implements ICalculationDAO {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<String> criteriaQuery = cb.createQuery(String.class);
         Root<Calculation> from = criteriaQuery.from(Calculation.class);
-        criteriaQuery.select(from.get(EXPRESSION_COLUMN));
 
         TypedQuery<String> pagedQuery = entityManager.createQuery(criteriaQuery);
         pagedQuery.setFirstResult(page.getPageNumber() * page.getPageSize());
