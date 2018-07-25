@@ -18,8 +18,7 @@ import java.math.BigInteger;
 import java.time.LocalDate;
 import java.util.concurrent.CompletableFuture;
 
-@Log4j2
-@RestController()
+@RestController
 @RequestMapping("/async")
 public class CalculationControllerAsync {
 
