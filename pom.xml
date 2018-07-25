@@ -211,7 +211,7 @@
                                     <alias>calculator</alias>
                                     <name>${docker.image.prefix}/${project.artifactId}</name>
                                     <build>
-                                        <dockerFile>${project.basedir}/Dokerfile</dockerFile>
+                                        <dockerFile>Dokerfile</dockerFile>
                                     </build>
                                     <run>
                                         <log>
