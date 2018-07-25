@@ -210,9 +210,6 @@
                                 <image>
                                     <alias>calculator</alias>
                                     <name>${docker.image.prefix}/${project.artifactId}</name>
-                                    <build>
-                                        <dockerFile>Dokerfile</dockerFile>
-                                    </build>
                                     <run>
                                         <log>
                                             <color>cyan</color> <prefix>CALC</prefix>
@@ -231,11 +228,8 @@
                                             <port>5432:5432</port>
                                         </ports>
                                         <wait>
-                                            <tcp>
-                                                <ports>
-                                                    <port>5432</port>
-                                                </ports>
-                                            </tcp>
+                                            <log>database system is ready to accept connections</log>
+                                            <time>20000</time>
                                         </wait>
                                     </run>
                                 </image>
