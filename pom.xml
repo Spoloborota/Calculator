@@ -91,10 +91,11 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.testcontainers</groupId>
-            <artifactId>testcontainers</artifactId>
-            <version>1.8.0</version>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpcomponents-client</artifactId>
+            <version>4.5.6</version>
         </dependency>
+
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
@@ -234,9 +235,11 @@
                             <images>
                                 <image>
                                     <name>postgres:9.5.4</name>
-                                    <alias>it-database</alias>
+                                    <alias>postgres</alias>
                                     <run>
-                                        <hostname>it-database</hostname>
+                                        <network>
+                                            <mode>host</mode>
+                                        </network>
                                         <env>
                                             <POSTGRES_PASSWORD>postgres</POSTGRES_PASSWORD>
                                             <POSTGRES_USER>postgres</POSTGRES_USER>
@@ -246,17 +249,17 @@
                                         </ports>
                                         <wait>
                                             <log>database system is ready to accept connections</log>
-                                            <time>20000</time>
+                                            <time>60000</time>
                                         </wait>
                                     </run>
                                 </image>
                                 <image>
                                     <alias>calculator</alias>
                                     <name>${docker.image.prefix}/${project.artifactId}</name>
-                                    <!--<build>-->
-                                        <!--<dockerFile>${project.basedir}/Dockerfile</dockerFile>-->
-                                    <!--</build>-->
                                     <run>
+                                        <network>
+                                            <mode>host</mode>
+                                        </network>
                                         <log>
                                             <color>cyan</color> <prefix>CALC</prefix>
                                         </log>
@@ -344,7 +347,6 @@
         <profile>
             <id>integration-test</id>
             <properties>
-                <jdbc.url>jdbc:postgresql://it-database:5432/calculationsdb</jdbc.url>
                 <resources.dir>integration-test</resources.dir>
                 <build.profile.id>integration-test</build.profile.id>
                 <skip.integration.tests>false</skip.integration.tests>

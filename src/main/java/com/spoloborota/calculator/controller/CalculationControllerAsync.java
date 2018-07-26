@@ -3,7 +3,6 @@ package com.spoloborota.calculator.controller;
 import com.spoloborota.calculator.entity.Calculation;
 import com.spoloborota.calculator.exception.WrongExpressionException;
 import com.spoloborota.calculator.service.ICalculationServiceAsync;
-import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigInteger;
-import java.time.LocalDate;
 import java.util.concurrent.CompletableFuture;
 
 @RestController
@@ -36,8 +34,8 @@ public class CalculationControllerAsync {
                 .thenApply(ResponseEntity::ok);
     }
 
-    @PostMapping("count")
-    public CompletableFuture<ResponseEntity<BigInteger>> count(@RequestBody LocalDate date) {
+    @GetMapping("count")
+    public CompletableFuture<ResponseEntity<BigInteger>> count(@RequestParam String date) {
         return calculationServiceAsync
                 .countByDate(date)
                 .thenApply(ResponseEntity::ok);
@@ -50,8 +48,8 @@ public class CalculationControllerAsync {
                 .thenApply(ResponseEntity::ok);
     }
 
-    @PostMapping("onDate")
-    public CompletableFuture<ResponseEntity<Page<Calculation>>> onDate(@RequestBody LocalDate date, @RequestParam int page, @RequestParam int size) {
+    @GetMapping("onDate")
+    public CompletableFuture<ResponseEntity<Page<Calculation>>> onDate(@RequestParam String date, @RequestParam int page, @RequestParam int size) {
         return calculationServiceAsync
                 .listByDate(date, page, size)
                 .thenApply(ResponseEntity::ok);

@@ -54,7 +54,7 @@ public class CalculationServiceAsync implements ICalculationServiceAsync {
     }
 
     @Override
-    public CompletableFuture<BigInteger> countByDate(LocalDate date) {
+    public CompletableFuture<BigInteger> countByDate(String date) {
         return calculationDAOAsync.countByDate(date);
     }
 
@@ -68,7 +68,7 @@ public class CalculationServiceAsync implements ICalculationServiceAsync {
     }
 
     @Override
-    public CompletableFuture<Page<Calculation>> listByDate(LocalDate date, int page, int size) {
+    public CompletableFuture<Page<Calculation>> listByDate(String date, int page, int size) {
         return calculationDAOAsync.listByDate(date, PageRequest.of(page, size));
     }
 

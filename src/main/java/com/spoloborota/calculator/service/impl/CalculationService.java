@@ -49,7 +49,7 @@ public class CalculationService implements ICalculationService {
     }
 
     @Override
-    public Long countByDate(LocalDate date) {
+    public Long countByDate(String date) {
         return calculationDAO.countByDate(date);
     }
 
@@ -63,7 +63,7 @@ public class CalculationService implements ICalculationService {
     }
 
     @Override
-    public Page<Calculation> listByDate(LocalDate date, int page, int size) {
+    public Page<Calculation> listByDate(String date, int page, int size) {
         return calculationDAO.listByDate(date, PageRequest.of(page, size));
     }
 

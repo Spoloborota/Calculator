@@ -8,14 +8,13 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.scheduling.annotation.Async;
 
 import java.math.BigInteger;
-import java.time.LocalDate;
 import java.util.concurrent.CompletableFuture;
 
 public interface ICalculationDAOAsync extends PagingAndSortingRepository<Calculation, String> {
 
     @Async("fixedThreadPoolExecutor")
     @Query(value = "SELECT COUNT(*) FROM calculation c WHERE c.date = ?1", nativeQuery = true)
-    CompletableFuture<BigInteger> countByDate(LocalDate date);
+    CompletableFuture<BigInteger> countByDate(String date);
 
     @Async("fixedThreadPoolExecutor")
     @Query(value = "SELECT COUNT(*) FROM calculation c WHERE c.expression LIKE %?1%", nativeQuery = true)
@@ -23,7 +22,7 @@ public interface ICalculationDAOAsync extends PagingAndSortingRepository<Calcula
 
     @Async("fixedThreadPoolExecutor")
     @Query(value = "SELECT * FROM calculation c WHERE c.date = ?1", nativeQuery = true)
-    CompletableFuture<Page<Calculation>> listByDate(LocalDate date, Pageable page);
+    CompletableFuture<Page<Calculation>> listByDate(String date, Pageable page);
 
     @Async("fixedThreadPoolExecutor")
     @Query(value = "SELECT * FROM calculation c WHERE c.expression LIKE %?1%", nativeQuery = true)
