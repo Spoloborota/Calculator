@@ -14,10 +14,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.time.LocalDate;
 import java.util.List;
 
-@RestController()
+@RestController
 @RequestMapping("/")
 public class CalculationController {
 
@@ -33,8 +32,8 @@ public class CalculationController {
         return new ResponseEntity<>(calculationService.calculateExpression(expression), HttpStatus.OK);
     }
 
-    @PostMapping("count")
-    public ResponseEntity<Long> count(@RequestBody LocalDate date) {
+    @GetMapping("count")
+    public ResponseEntity<Long> count(@RequestParam String date) {
         return new ResponseEntity<>(calculationService.countByDate(date), HttpStatus.OK);
     }
 
@@ -43,8 +42,8 @@ public class CalculationController {
         return new ResponseEntity<>(calculationService.countContainsOp(operation), HttpStatus.OK);
     }
 
-    @PostMapping("onDate")
-    public List<Calculation> onDate(@RequestBody LocalDate date, @RequestParam int page, @RequestParam int size) {
+    @GetMapping("onDate")
+    public List<Calculation> onDate(@RequestParam String date, @RequestParam int page, @RequestParam int size) {
         return calculationService.listByDate(date, page, size).getContent();
     }
 

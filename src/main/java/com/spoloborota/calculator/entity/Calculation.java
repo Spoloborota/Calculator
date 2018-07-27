@@ -1,6 +1,8 @@
 package com.spoloborota.calculator.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
@@ -12,14 +14,15 @@ import javax.persistence.Table;
 import java.io.Serializable;
 import java.time.LocalDate;
 
-@Data
 @NoArgsConstructor
+@Data
 @Entity
 @Table(name="calculation")
+@EqualsAndHashCode(exclude = {"id","date"})
 public class Calculation implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    public Calculation(LocalDate date, String expression, Double result) {
+    public Calculation(String date, String expression, Double result) {
         this.date = date;
         this.expression = expression;
         this.result = result;
@@ -31,7 +34,8 @@ public class Calculation implements Serializable {
     private Long id;
 
     @Column
-    private LocalDate date;
+//    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    private String date;
 
     @Column
     private String expression;

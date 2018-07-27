@@ -8,8 +8,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.time.LocalDate;
-
 import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
@@ -21,18 +19,17 @@ public class ICalculationDAOTest {
 
     @Test
     public void addCalculation() {
-        calculationDAO.addCalculation(new Calculation(
-                LocalDate.of(2018, 7, 20), "10^2", 100.0));
-        Calculation result = calculationDAO.listByDate(LocalDate.of(2018, 7, 20), PageRequest.of(0, 1))
+        calculationDAO.addCalculation(new Calculation("2018-07-20", "10^2", 100.0));
+        Calculation result = calculationDAO.listByDate("2018-07-20", PageRequest.of(0, 1))
                 .getContent().get(0);
-        assertEquals(LocalDate.of(2018, 7, 20), result.getDate());
+        assertEquals("2018-07-20", result.getDate());
         assertEquals("10^2", result.getExpression());
         assertEquals(Double.valueOf(100.0), result.getResult());
     }
 
     @Test
     public void countByDate() {
-        Long result = calculationDAO.countByDate(LocalDate.of(2018, 7, 18));
+        Long result = calculationDAO.countByDate("2018-07-18");
         assertEquals(Long.valueOf(2L), result);
     }
 
@@ -44,7 +41,7 @@ public class ICalculationDAOTest {
 
     @Test
     public void listByDate() {
-        int result = calculationDAO.listByDate(LocalDate.of(2018, 7, 18), PageRequest.of(0, 10))
+        int result = calculationDAO.listByDate("2018-07-18", PageRequest.of(0, 10))
                 .getContent().size();
         assertEquals(2, result);
     }

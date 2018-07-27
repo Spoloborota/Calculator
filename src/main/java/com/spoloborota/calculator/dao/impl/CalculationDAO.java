@@ -14,7 +14,6 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
-import java.time.LocalDate;
 
 import static com.spoloborota.calculator.common.Constants.*;
 
@@ -31,7 +30,7 @@ public class CalculationDAO implements ICalculationDAO {
     }
 
     @Override
-    public Long countByDate(LocalDate date) {
+    public Long countByDate(String date) {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Long> countQuery = cb.createQuery(Long.class);
         Root<Calculation> calculation = countQuery.from(Calculation.class);
@@ -51,7 +50,7 @@ public class CalculationDAO implements ICalculationDAO {
     }
 
     @Override
-    public Page<Calculation> listByDate(LocalDate date, Pageable page) {
+    public Page<Calculation> listByDate(String date, Pageable page) {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Calculation> selectQuery = cb.createQuery(Calculation.class);
         Root<Calculation> calculation = selectQuery.from(Calculation.class);
@@ -68,7 +67,6 @@ public class CalculationDAO implements ICalculationDAO {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Calculation> criteriaQuery = cb.createQuery(Calculation.class);
         Root<Calculation> from = criteriaQuery.from(Calculation.class);
-        criteriaQuery.select(from.get(EXPRESSION_COLUMN));
         criteriaQuery.where(cb.like(from.get(EXPRESSION_COLUMN), ANY_STRING + operation + ANY_STRING));
 
         TypedQuery<Calculation> pagedQuery = entityManager.createQuery(criteriaQuery);
