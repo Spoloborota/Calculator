@@ -49,7 +49,7 @@ public class CalculationServiceAsync implements ICalculationServiceAsync {
     public CompletableFuture<Double> calculateExpression(String expr) {
         CompletableFuture<Double> resultFuture = CompletableFuture.supplyAsync(() -> calculator.calculate(expr));
         resultFuture.thenApplyAsync((d) ->
-                calculationDAOAsync.save(new Calculation(LocalDate.now(), expr, d)), fixedThreadPool);
+                calculationDAOAsync.save(new Calculation(LocalDate.now().toString(), expr, d)), fixedThreadPool);
         return resultFuture;
     }
 

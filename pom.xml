@@ -117,30 +117,34 @@
             <resource>
                 <filtering>true</filtering>
                 <directory>src/main/resources</directory>
+                <!--<excludes>-->
+                    <!--<exclude>src/integration-test/**</exclude>-->
+                <!--</excludes>-->
             </resource>
         </resources>
-        <plugins><plugin>
-            <artifactId>maven-resources-plugin</artifactId>
-            <version>3.1.0</version>
-            <executions>
-                <execution>
-                    <id>copy-resources</id>
-                    <phase>compile</phase>
-                    <goals>
-                        <goal>copy-resources</goal>
-                    </goals>
-                    <configuration>
-                        <outputDirectory>${basedir}/target/classes</outputDirectory>
-                        <resources>
-                            <resource>
-                                <directory>src/${resources.dir}/resources</directory>
-                                <filtering>true</filtering>
-                            </resource>
-                        </resources>
-                    </configuration>
-                </execution>
-            </executions>
-        </plugin>
+        <plugins>
+            <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>3.1.0</version>
+                <executions>
+                    <execution>
+                        <id>copy-resources</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${basedir}/target/classes</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>src/${resources.dir}/resources</directory>
+                                    <filtering>true</filtering>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
@@ -293,40 +297,40 @@
                 </executions>
             </plugin>
 
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>build-helper-maven-plugin</artifactId>
-                <version>1.9.1</version>
-                <executions>
-                    <execution>
-                        <id>add-integration-test-sources</id>
-                        <phase>generate-test-sources</phase>
-                        <goals>
-                            <goal>add-test-source</goal>
-                        </goals>
-                        <configuration>
-                            <sources>
-                                <source>src/integration-test/java</source>
-                            </sources>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>add-integration-test-resources</id>
-                        <phase>generate-test-resources</phase>
-                        <goals>
-                            <goal>add-test-resource</goal>
-                        </goals>
-                        <configuration>
-                            <resources>
-                                <resource>
-                                    <filtering>true</filtering>
-                                    <directory>src/integration-test/resources</directory>
-                                </resource>
-                            </resources>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
+            <!--<plugin>-->
+                <!--<groupId>org.codehaus.mojo</groupId>-->
+                <!--<artifactId>build-helper-maven-plugin</artifactId>-->
+                <!--<version>1.9.1</version>-->
+                <!--<executions>-->
+                    <!--<execution>-->
+                        <!--<id>add-integration-test-sources</id>-->
+                        <!--<phase>generate-test-sources</phase>-->
+                        <!--<goals>-->
+                            <!--<goal>add-test-source</goal>-->
+                        <!--</goals>-->
+                        <!--<configuration>-->
+                            <!--<sources>-->
+                                <!--<source>src/integration-test/java</source>-->
+                            <!--</sources>-->
+                        <!--</configuration>-->
+                    <!--</execution>-->
+                    <!--<execution>-->
+                        <!--<id>add-integration-test-resources</id>-->
+                        <!--<phase>generate-test-resources</phase>-->
+                        <!--<goals>-->
+                            <!--<goal>add-test-resource</goal>-->
+                        <!--</goals>-->
+                        <!--<configuration>-->
+                            <!--<resources>-->
+                                <!--<resource>-->
+                                    <!--<filtering>true</filtering>-->
+                                    <!--<directory>src/integration-test/resources</directory>-->
+                                <!--</resource>-->
+                            <!--</resources>-->
+                        <!--</configuration>-->
+                    <!--</execution>-->
+                <!--</executions>-->
+            <!--</plugin>-->
         </plugins>
     </build>
 
@@ -337,6 +341,7 @@
                 <activeByDefault>true</activeByDefault>
             </activation>
             <properties>
+                <testresources.dir>test</testresources.dir>
                 <resources.dir>main</resources.dir>
                 <build.profile.id>dev</build.profile.id>
                 <skip.integration.tests>true</skip.integration.tests>
@@ -347,6 +352,7 @@
         <profile>
             <id>integration-test</id>
             <properties>
+                <testresources.dir>integration-test</testresources.dir>
                 <resources.dir>integration-test</resources.dir>
                 <build.profile.id>integration-test</build.profile.id>
                 <skip.integration.tests>false</skip.integration.tests>

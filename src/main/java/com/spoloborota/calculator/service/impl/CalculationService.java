@@ -44,7 +44,7 @@ public class CalculationService implements ICalculationService {
     @Override
     public Double calculateExpression(String expr) throws WrongExpressionException {
         Double result = calculator.calculate(expr);
-        calculationDAO.addCalculation(new Calculation(LocalDate.now(), expr, result));
+        calculationDAO.addCalculation(new Calculation(LocalDate.now().toString(), expr, result));
         return result;
     }
 
